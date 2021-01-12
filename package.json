@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "get-demo-data": "npx sequelize-cli db:seed:all",
+    "build": "npm run migrate && npx sequelize-cli db:seed:all && npm run start"
   },
   "keywords": [],
   "author": "",

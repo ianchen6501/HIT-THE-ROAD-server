@@ -1,7 +1,8 @@
-- 簡介
-  這是 HIT-THE-ROAD 旅遊規劃網站的後端原始碼，採用 Express.js 及 Sequelize.js 開發，提供使用者註冊、登入及旅遊行程儲存等功能。
+## 簡介
 
-- 資料庫建置及伺服器部屬
+這是 HIT-THE-ROAD 旅遊規劃網站的後端原始碼，採用 Express.js 及 Sequelize.js 開發，提供使用者註冊、登入及旅遊行程儲存等功能。
+
+## 資料庫建置及伺服器部屬
 
 1. 創建你要進行建置的資料夾，並執行`git init`。
 2. 輸入指令`git clone url`，下載資料。
@@ -11,7 +12,7 @@
 ```js
 {
   "development": {
-    "username": "username", //敏感資訊可以用環境變數帶入
+    "username": "username", // 敏感資訊可以用環境變數帶入
     "password": "password",
     "database": "database",
     "host": "localhost",
@@ -44,12 +45,22 @@ DB_DATABASE = ""
 ```
 
 6. 輸入指令 `npm run migrate` 以執行 Sequelize migration，在 MySQL 資料庫中建立 database 及 table。
-7. 執行`node index.js`，開始運行伺服器。
+7. 執行`npm run start`、`node index.js`，開始運行伺服器。
    //TODO: 研究 seeders 及如何建置 demo 資料，修改 scripts ，增加 npm run start / npm run build。
 
-- 開發 //TODO:
+## 開發
 
-- 專案架構 //TODO: controllers / middlewares / routes
+```js
+npm run start // 執行 node index.js
+```
+
+## 部屬
+
+```js
+npm run build // 執行 sequelize migration / sequelize seeders / node index.js
+```
+
+## 專案架構
 
 ```js
 |   index.js                 // App 伺服器入口點
@@ -61,15 +72,12 @@ DB_DATABASE = ""
 |     config.json            // Sequelize 設定檔
 |
 +---controllers              // 處理 API 邏輯
-
-+---middlewares              // 自訂 middlewares
-
+|     users
+|     schedules
 +---models                   // 透過 Sequelize 和資料庫溝通
 |     index.js
 |     user.js
 |     schedules.js
-|
-+---routes                    // 區分不同功能的 API 路由
 |
 +---node_modules
 |
@@ -78,24 +86,25 @@ DB_DATABASE = ""
 \---seeders                   // Sequelize seeders
 ```
 
-- 第三方 libray
-  bcrypt
+## 第三方 libray
+
+- bcrypt
   使用此套件將密碼加密後再存入資料庫
 
-cors
-使用此套件解決跨來源資源共用
+- cors
+  使用此套件解決跨來源資源共用
 
-dotenv //TODO:
-使用此套件設置環境變數
+- dotenv
+  使用此套件設置環境變數
 
-jsonwebtoken
-使用 JWT 來實作登入機制驗證
+- jsonwebtoken
+  使用 JWT 來實作登入機制驗證
 
-mysql2
-使用 mysql2 連線資料庫
+- mysql2
+  使用 mysql2 連線資料庫
 
-sequelize
-使用 ORM 工具 Sequelize 來操作資料庫
+- sequelize
+  使用 ORM 工具 Sequelize 來操作資料庫
 
 - API 文件
   [HIT-THE-ROAD API document](https://github.com/yunanpan/final-project/issues/5)
