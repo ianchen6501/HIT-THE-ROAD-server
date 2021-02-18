@@ -46,7 +46,7 @@ app.delete('/schedules/:id', schedulesController.deleteSchedule)
 app.put('/schedules/:id', schedulesController.putSchedule)
 app.patch('/schedules/:id', schedulesController.patchScheduleIsFinished)
 app.get(`/posts`, schedulesController.getAllPosts)
-app.get(`/posts/:scheduleId`, schedulesController.getOnePost)
+app.get(`/posts/:id`, schedulesController.getOnePost)
 
 app.listen(port, () => { //監聽 port
   console.log(`Example app listening at http://localhost:${port}`)

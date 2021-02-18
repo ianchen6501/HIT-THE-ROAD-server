@@ -4,7 +4,7 @@ const users = db.Users
 
 const schedulesController = {
   getAllSchedules : (req, res) => {
-    //沒有設定 queryString 的情況
+    //isfinished
     if(req.query.isFinished) {
       schedules.findAll({
         where : {
@@ -14,32 +14,32 @@ const schedulesController = {
           ['id', 'DESC']
         ],
       }).then(schedules => {
-        if(schedules) {
-          return res.send(schedules)
+        if(schedules.length) {
+          return res.send(schedules).end()
         }
-        res.end('no content')
+        res.send('no content').end()
       }).catch(error => {
-        return res.send(error.toString())
+        res.send(error.toString()).end()
       })
-    } else { //有設定已完成 / 未完成 query 的情況
+    } else { //all
       schedules.findAll({
         order: [
           ['id', 'DESC']
         ]
       })
       .then(schedules => {
-        if(schedules) {
-          return res.send(schedules)
+        if(schedules.length) {
+          return res.send(schedules).end()
         }
-        res.end('no content')
+        res.send('no content').end()
       }).catch(error => {
-        return res.send(error.toString())
+        res.send(error.toString()).end()
       })
     }
   },  
 
   getAllPosts : (req, res) => { 
-    //沒有設定 queryString
+    //filter
     if(req.query.filter) {
       schedules.findAll({
         where: {
@@ -57,14 +57,14 @@ const schedulesController = {
         ],
       })
       .then(posts => {
-        if(posts) {
-          return res.send(posts)
+        if(posts.length) {
+          return res.send(posts).end()
         }
-        res.end('no content')
+        res.send('no content').end()
       }).catch(error => {
-        return res.send(error.toString())
+        res.send(error.toString()).end()
       })
-    } else {
+    } else { //all
       schedules.findAll({
         where : {
           isFinished: true,
@@ -79,12 +79,12 @@ const schedulesController = {
           ['id', 'DESC']
         ],
       }).then(posts => {
-        if(posts) {
-          return res.send(posts)
+        if(posts.length) {
+          return res.send(posts).end()
         }
-        res.end('no content')
+        res.send('no content').end()
       }).catch(error => {
-        return res.send(error.toString())
+        return res.send(error.toString()).end()
       })
     }
   },
@@ -92,7 +92,7 @@ const schedulesController = {
   getOnePost : (req, res) => {
     schedules.findOne({
       where: {
-        id: req.params.scheduleId
+        id: req.params.id
       },
       attributes: ['id','scheduleName', 'location', 'dailyRoutines', 'dateRange', 'userId'],
       include: [{
@@ -101,37 +101,20 @@ const schedulesController = {
         required: true,
       }]
     })
-    .then(schedules => {
-      if(schedules) {
-        return res.send(schedules)
+    .then(post => {
+      if(post.length) {
+        return res.send(schedules).end()
       }
-      res.end('no content')
+      res.send('no content').end()
     }).catch(error => {
-      return res.send(error.toString())
+      return res.send(error.toString()).end()
     })
   },
 
   getUserAllSchedules : (req, res) => { 
-    //沒有設定 queryString
-    if(req.query.isFinished === undefined) {
-      const UserId = req.params.userId
-      schedules.findAll({
-        where : {
-          UserId,
-        },
-        order: [
-          ['id', 'DESC']
-        ]
-      }).then(schedules => {
-        if(schedules) {
-          return res.send(schedules)
-        }
-        res.end('no content')
-      }).catch(error => {
-        return res.send(error.toString())
-      })
-    } else if(req.query.isFinished) { //未完成
-      const UserId = req.params.userId
+    const UserId = req.params.userId
+    //isFinished
+    if(req.query.isFinished) {
       schedules.findAll({
         where : {
           UserId,
@@ -141,12 +124,28 @@ const schedulesController = {
           ['id', 'DESC']
         ]
       }).then(schedules => {
-        if(schedules) {
-          return res.send(schedules)
+        if(schedules.length) {
+          return res.send(schedules).end()
         }
-        res.end('no content')
+        res.send('no content').end()
       }).catch(error => {
-        return res.send(error.toString())
+        res.send(error.toString()).end()
+      })
+    } else { //all
+      schedules.findAll({
+        where : {
+          UserId,
+        },
+        order: [
+          ['id', 'DESC']
+        ]
+      }).then(schedules => {
+        if(schedules.length) {
+          return res.send(schedules).end()
+        }
+        res.send('no content').end()
+      }).catch(error => {
+        res.send(error.toString()).end()
       })
     }
   },
@@ -160,11 +159,11 @@ const schedulesController = {
       }
     }).then(schedule => {
       if(schedule) {
-        return res.send(schedule)
+        return res.send(schedule).end()
       }
-      res.end('no content')
+      res.send('no content').end()
     }).catch(error => {
-      return res.send(error.toString())
+      return res.send(error.toString()).end()
     })
   },
 
@@ -181,7 +180,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.end(JSON.stringify(body))
+      return res.send(JSON.stringify(body)).end()
     }
     const body = {
       scheduleName,
@@ -197,13 +196,13 @@ const schedulesController = {
         message: "create success",
         scheduleData: response
       }
-      return res.end(JSON.stringify(body))
+      res.send(JSON.stringify(body)).end()
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      return res.end(JSON.stringify(body))
+      res.send(JSON.stringify(body)).end()
     })
   },
 
@@ -214,7 +213,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.end(JSON.stringify(body))
+      return res.send(JSON.stringify(body)).end()
     }
     schedules.findOne({
       where : {
@@ -228,14 +227,14 @@ const schedulesController = {
           ok: true,
           message: "delete success"
         }
-        return res.end(JSON.stringify(body))
+        res.send(JSON.stringify(body)).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      return res.end(JSON.stringify(body))
+      res.send(JSON.stringify(body)).end()
     })
   },
 
@@ -257,7 +256,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.end(JSON.stringify(body))
+      return res.send(JSON.stringify(body)).end()
     }
     
     const body = {
@@ -283,20 +282,20 @@ const schedulesController = {
           ok: true,
           message: "put success"
         }
-        return res.end(JSON.stringify(body))
+        res.send(JSON.stringify(body)).end()
       }).catch(error => {
         const body = {
           ok: false,
           message: error.toString()
         }
-        return res.end(JSON.stringify(body))
+        res.send(JSON.stringify(body)).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      return res.end(JSON.stringify(body))
+      res.send(JSON.stringify(body)).end()
     })
   },
 
@@ -308,7 +307,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.end(JSON.stringify(body))
+      return res.send(JSON.stringify(body)).end()
     }
   
     const body = {
@@ -327,20 +326,20 @@ const schedulesController = {
           ok: true,
           message: "patch success"
         }
-        return res.end(JSON.stringify(body))
+        res.send(JSON.stringify(body)).end()
       }).catch(error => {
         const body = {
           ok: false,
           message: error.toString()
         }
-        return res.end(JSON.stringify(body))
+        res.send(JSON.stringify(body)).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      return res.end(JSON.stringify(body))
+      res.send(JSON.stringify(body)).end()
     })
   }
 }
