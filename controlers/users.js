@@ -207,7 +207,7 @@ const usersController = {
         } else {
           const payload ={
             "sub" : "hittheroad",
-            "name" : username,
+            "name" : username, //存 username 會打架
             "admin" : false,
           }
           const secret = "12345"
