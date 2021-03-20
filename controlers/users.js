@@ -5,6 +5,12 @@ const jwt = require('jsonwebtoken')
 
 const usersController = {
   tokenLogin : (req, res) => {
+    // const cookies = req.cookies
+    // console.log(cookies)
+    // console.log(cookies["connect.sid"])
+    //TODO: 找出 req.session.token = undefined 原因
+    // console.log(req.session)
+    // console.log(req.session.token)
     const token = req.body.token
     users.findOne({
       where: {
@@ -21,7 +27,7 @@ const usersController = {
       } else {
         const body = {
           ok: false,
-          message: "please login"
+          message: "login fail"
         }
         return res.end(JSON.stringify(body))
       }
@@ -33,7 +39,7 @@ const usersController = {
       return res.end(JSON.stringify(body))
     })
   },
-
+  //TODO: 修改設定 cookie
   login : (req, res) => {
     function handleLogin() {
       const { username, password } = req.body
@@ -49,6 +55,7 @@ const usersController = {
           }
           return res.end(JSON.stringify(response))
         }
+        //verify pwd
         bcrypt.compare(password, userData.password, function(err, isSuccess) {
           if (err || !isSuccess) {
             const body = {
@@ -57,7 +64,14 @@ const usersController = {
             }
             return res.end(JSON.stringify(body))
           }
-          req.session.token = userData.token
+          //重新建立 session-id
+          // req.session.regenerate(function(err) {
+          //   if(err) {
+          //     return res.json("login fail").end()
+          //   }
+            
+          // })
+          
           const body = {
             ok: true,
             message: "login",
@@ -69,7 +83,10 @@ const usersController = {
             },
             token: userData.token
           }
+          const maxAge = 10*24*60*60*1000
           const json = JSON.stringify(body)
+          res.cookie("test", "yoyo")
+          res.signedcookie("token", userData.token.toString(), { signed: true, maxAge})
           return res.end(json)
         })
       }).catch(error => {
