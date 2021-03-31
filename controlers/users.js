@@ -2,16 +2,12 @@ const db = require("../models")
 const users = db.Users
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const requestUrl = "http://localhost:3000"
 
 const usersController = {
+  //TODO: 
   tokenLogin : (req, res) => {
-    // const cookies = req.cookies
-    // console.log(cookies)
-    // console.log(cookies["connect.sid"])
-    //TODO: 找出 req.session.token = undefined 原因
-    // console.log(req.session)
-    // console.log(req.session.token)
-    const token = req.body.token
+    const token = req.cookies.token
     users.findOne({
       where: {
         token
@@ -39,7 +35,7 @@ const usersController = {
       return res.end(JSON.stringify(body))
     })
   },
-  //TODO: 修改設定 cookie
+
   login : (req, res) => {
     function handleLogin() {
       const { username, password } = req.body
@@ -83,10 +79,11 @@ const usersController = {
             },
             token: userData.token
           }
+          //TODO: 20200330 改成 cookies 存登入資訊
           const maxAge = 10*24*60*60*1000
           const json = JSON.stringify(body)
-          res.cookie("test", "yoyo")
-          res.signedcookie("token", userData.token.toString(), { signed: true, maxAge})
+          const options = { maxAge: maxAge, sameSite: "none", secure: true, httpOnly: true}
+          res.cookie("token", userData.token.toString(), options)
           return res.end(json)
         })
       }).catch(error => {

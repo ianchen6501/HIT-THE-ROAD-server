@@ -1,23 +1,29 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 5003
+const port = process.env.PORT || 443
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const flash = require('connect-flash')
 const cors = require('cors')
+const fs = require('fs')
+const https = require('https')
 require('dotenv').config()
 
-const requestUrl = "http://localhost:3000"
+//設定 cors，預設非 same-origin 不能存取
+const requestUrl = {
+  local: "http://localhost:3000",
+  remote: "https://ianchen6501.github.io"
+}
 const corsOptions = {
-  origin: requestUrl,
+  origin: requestUrl.local,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  // allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
-//設定 cors，預設非 same-origin 不能存取
 app.use(cors(corsOptions)); 
-//body parsor_middleware_可以解析 json / post 等資訊
+
+//body parsor middleware 可以解析 json / post 等資訊
 app.use(bodyParser.urlencoded({ extended: false })) //parse urlencoed
 app.use(bodyParser.json()) //parse json
 app.use(cookieParser("sign"))
@@ -38,17 +44,24 @@ app.use(session({
   }
 }))
 
+//設定 option cors
+app.options('/', (req, res, next) => {
+  req.header('Access-Control-Allow-Origin', requestUrl.local)
+  req.header('Access-Control-Allow-credentials', true)
+  next()
+})
+
 //usersController
 const usersController = require('./controlers/users')
 
-app.post('/users/', usersController.tokenLogin)
+app.get('/users/', usersController.tokenLogin)
 app.post('/login/:method', usersController.login)
 app.post('/register/:method', usersController.register)
 
 //schedulesController
 const schedulesController = require("./controlers/schedules")
-app.get(`/schedules`, schedulesController.getAllSchedules)
-app.get(`/schedules/:userId`, schedulesController.getUserAllSchedules)
+app.get('/schedules', schedulesController.getAllSchedules)
+app.get('/schedules/:userId', schedulesController.getUserAllSchedules)
 app.get('/schedules/:userId/:id', schedulesController.getUserOneSchedule)
 app.post('/schedules/', schedulesController.addSchedule)
 app.delete('/schedules/:id', schedulesController.deleteSchedule)
@@ -57,6 +70,26 @@ app.patch('/schedules/:id', schedulesController.patchScheduleIsFinished)
 app.get(`/posts`, schedulesController.getAllPosts)
 app.get(`/posts/:id`, schedulesController.getOnePost)
 
-app.listen(port, () => { //監聽 port
-  console.log(`Example app listening at http://localhost:${port}`)
+//https test
+app.get('/', (req, res) => {
+  res.send("https work successfully!").end()
 })
+
+//建立 https server
+const keyPath = "./SSL/localhost-key.pem"
+const certPath = "./SSL/localhost.pem"
+const key = fs.readFileSync(keyPath)
+const cert = fs.readFileSync(certPath)
+const options = {
+  key,
+  cert
+}
+const server = https.createServer(options, app)
+server.listen(port, () => { //監聽 port
+  console.log(`Example app listening at https://localhost:${port}`)
+})
+
+//建立連線監聽
+// app.listen(port, () => { //監聽 port
+//   console.log(`Example app listening at https://localhost:${port}`)
+// })

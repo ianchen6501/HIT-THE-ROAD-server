@@ -65,8 +65,8 @@ const schedulesController = {
         res.json(error.toString()).end()
       })
     } else { //all
-      //TODO: 測試 cookies
-      const cookies = req.cookies.token
+      //FIXME: 測試 cookies
+      const cookies = req.cookies
       console.log(cookies)
 
       schedules.findAll({
