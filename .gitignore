@@ -12,6 +12,7 @@ key.js
 
 # production
 /build
+/SSL
 
 # misc
 .env

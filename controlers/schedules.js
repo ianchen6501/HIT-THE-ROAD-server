@@ -14,10 +14,10 @@ const schedulesController = {
           ['id', 'DESC']
         ],
       }).then(schedules => {
-        if(schedules.length) {
+        // if(schedules.length) {
           return res.send(schedules).end()
-        }
-        res.send('no content').end()
+        // }
+        // res.send('no content').end()
       }).catch(error => {
         res.send(error.toString()).end()
       })
@@ -28,17 +28,17 @@ const schedulesController = {
         ]
       })
       .then(schedules => {
-        if(schedules.length) {
+        // if(schedules.length) {
           return res.send(schedules).end()
-        }
-        res.send('no content').end()
+        // }
+        // res.send('no content').end()
       }).catch(error => {
         res.send(error.toString()).end()
       })
     }
   },  
 
-  getAllPosts : (req, res) => { 
+  getAllPosts : (req, res) => {
     //filter
     if(req.query.filter) {
       schedules.findAll({
@@ -57,14 +57,18 @@ const schedulesController = {
         ],
       })
       .then(posts => {
-        if(posts.length) {
-          return res.send(posts).end()
-        }
-        res.send('no content').end()
+        // if(posts.length) {
+          return res.json(posts).end()
+        // }
+        // res.json('no content').end()
       }).catch(error => {
-        res.send(error.toString()).end()
+        res.json(error.toString()).end()
       })
     } else { //all
+      //FIXME: 測試 cookies
+      const cookies = req.cookies
+      console.log(cookies)
+
       schedules.findAll({
         where : {
           isFinished: true,
@@ -79,12 +83,17 @@ const schedulesController = {
           ['id', 'DESC']
         ],
       }).then(posts => {
-        if(posts.length) {
-          return res.send(posts).end()
-        }
-        res.send('no content').end()
+        // if(posts.length) {
+        // parse JSON couloum datatype
+        posts.map(post => {
+          post.dailyRoutines = JSON.parse(post.dailyRoutines)
+          post.dateRange = JSON.parse(post.dateRange)
+        })
+        return res.json(posts).end()
+        // }
+        // res.json('no content').end()
       }).catch(error => {
-        return res.send(error.toString()).end()
+        return res.json(error.toString()).end()
       })
     }
   },
@@ -102,10 +111,10 @@ const schedulesController = {
       }]
     })
     .then(post => {
-      if(post.length) {
-        return res.send(schedules).end()
+      if(post) {
+        return res.json(post).end()
       }
-      res.send('no content').end()
+      res.json([]).end()
     }).catch(error => {
       return res.send(error.toString()).end()
     })
@@ -124,10 +133,15 @@ const schedulesController = {
           ['id', 'DESC']
         ]
       }).then(schedules => {
-        if(schedules.length) {
-          return res.send(schedules).end()
-        }
-        res.send('no content').end()
+        // if(schedules.length) {
+        //parse JSON coloumn datatype
+        schedules.map(schedule => {
+          schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
+          schedule.dateRange = JSON.parse(schedule.dateRange)
+        })
+        res.json(schedules).end()
+        // }
+        // res.send('no content').end()
       }).catch(error => {
         res.send(error.toString()).end()
       })
@@ -140,10 +154,10 @@ const schedulesController = {
           ['id', 'DESC']
         ]
       }).then(schedules => {
-        if(schedules.length) {
-          return res.send(schedules).end()
-        }
-        res.send('no content').end()
+        // if(schedules.length) {
+          return res.json(schedules).end()
+        // }
+        // res.send('no content').end()
       }).catch(error => {
         res.send(error.toString()).end()
       })
@@ -159,11 +173,19 @@ const schedulesController = {
       }
     }).then(schedule => {
       if(schedule) {
-        return res.send(schedule).end()
+        //parse JSON coloumn datatype
+        //TODO: 確認是否如此轉換
+        schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
+        schedule.dateRange = JSON.parse(schedule.dateRange)
+        schedule.routes = JSON.parse(schedule.routes)
+        schedule.markers = JSON.parse(schedule.markers)
+        schedule.spots = JSON.parse(schedule.spots)
+        schedule.spotsIds = JSON.parse(schedule.spotsIds)
+        return res.json(schedule).end()
       }
-      res.send('no content').end()
+      res.json([]).end()
     }).catch(error => {
-      return res.send(error.toString()).end()
+      return res.json(error.toString()).end()
     })
   },
 
@@ -180,7 +202,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.send(JSON.stringify(body)).end()
+      return res.json(body).end()
     }
     const body = {
       scheduleName,
@@ -196,13 +218,13 @@ const schedulesController = {
         message: "create success",
         scheduleData: response
       }
-      res.send(JSON.stringify(body)).end()
+      res.json(body).end()
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      res.send(JSON.stringify(body)).end()
+      res.json(body).end()
     })
   },
 
@@ -213,7 +235,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.send(JSON.stringify(body)).end()
+      return res.json(body).end()
     }
     schedules.findOne({
       where : {
@@ -227,14 +249,14 @@ const schedulesController = {
           ok: true,
           message: "delete success"
         }
-        res.send(JSON.stringify(body)).end()
+        res.json(body).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      res.send(JSON.stringify(body)).end()
+      res.json(body).end()
     })
   },
 
@@ -256,7 +278,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.send(JSON.stringify(body)).end()
+      return res.json(body).end()
     }
     
     const body = {
@@ -282,20 +304,20 @@ const schedulesController = {
           ok: true,
           message: "put success"
         }
-        res.send(JSON.stringify(body)).end()
+        res.json(body).end()
       }).catch(error => {
         const body = {
           ok: false,
           message: error.toString()
         }
-        res.send(JSON.stringify(body)).end()
+        res.json(body).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      res.send(JSON.stringify(body)).end()
+      res.json(body).end()
     })
   },
 
@@ -307,7 +329,7 @@ const schedulesController = {
         ok: false,
         message: "wrong authority"
       }
-      return res.send(JSON.stringify(body)).end()
+      return res.json(body).end()
     }
   
     const body = {
@@ -326,20 +348,20 @@ const schedulesController = {
           ok: true,
           message: "patch success"
         }
-        res.send(JSON.stringify(body)).end()
+        res.json(body).end()
       }).catch(error => {
         const body = {
           ok: false,
           message: error.toString()
         }
-        res.send(JSON.stringify(body)).end()
+        res.json(body).end()
       })
     }).catch(error => {
       const body = {
         ok: false,
         message: error.toString()
       }
-      res.send(JSON.stringify(body)).end()
+      res.json(body).end()
     })
   }
 }

@@ -2,10 +2,12 @@ const db = require("../models")
 const users = db.Users
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const requestUrl = "http://localhost:3000"
 
 const usersController = {
+  //TODO: 
   tokenLogin : (req, res) => {
-    const token = req.body.token
+    const token = req.cookies.token
     users.findOne({
       where: {
         token
@@ -21,7 +23,7 @@ const usersController = {
       } else {
         const body = {
           ok: false,
-          message: "please login"
+          message: "login fail"
         }
         return res.end(JSON.stringify(body))
       }
@@ -49,6 +51,7 @@ const usersController = {
           }
           return res.end(JSON.stringify(response))
         }
+        //verify pwd
         bcrypt.compare(password, userData.password, function(err, isSuccess) {
           if (err || !isSuccess) {
             const body = {
@@ -57,7 +60,14 @@ const usersController = {
             }
             return res.end(JSON.stringify(body))
           }
-          req.session.token = userData.token
+          //重新建立 session-id
+          // req.session.regenerate(function(err) {
+          //   if(err) {
+          //     return res.json("login fail").end()
+          //   }
+            
+          // })
+          
           const body = {
             ok: true,
             message: "login",
@@ -69,7 +79,11 @@ const usersController = {
             },
             token: userData.token
           }
+          //TODO: 20200330 改成 cookies 存登入資訊
+          const maxAge = 10*24*60*60*1000
           const json = JSON.stringify(body)
+          const options = { maxAge: maxAge, sameSite: "none", secure: true, httpOnly: true}
+          res.cookie("token", userData.token.toString(), options)
           return res.end(json)
         })
       }).catch(error => {
