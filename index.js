@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 443
+const port = process.env.PORT || 5000
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
@@ -71,25 +71,25 @@ app.get(`/posts`, schedulesController.getAllPosts)
 app.get(`/posts/:id`, schedulesController.getOnePost)
 
 //https test
-app.get('/', (req, res) => {
-  res.send("https work successfully!").end()
-})
+// app.get('/', (req, res) => {
+//   res.send("https work successfully!").end()
+// })
 
 //建立 https server
-const keyPath = "./SSL/localhost-key.pem"
-const certPath = "./SSL/localhost.pem"
-const key = fs.readFileSync(keyPath)
-const cert = fs.readFileSync(certPath)
-const options = {
-  key,
-  cert
-}
-const server = https.createServer(options, app)
-server.listen(port, () => { //監聽 port
-  console.log(`Example app listening at https://localhost:${port}`)
-})
-
-//建立連線監聽
-// app.listen(port, () => { //監聽 port
+// const keyPath = "./SSL/localhost-key.pem"
+// const certPath = "./SSL/localhost.pem"
+// const key = fs.readFileSync(keyPath)
+// const cert = fs.readFileSync(certPath)
+// const options = {
+//   key,
+//   cert
+// }
+// const server = https.createServer(options, app)
+// server.listen(port, () => { //監聽 port
 //   console.log(`Example app listening at https://localhost:${port}`)
 // })
+
+//建立連線監聽
+app.listen(port, () => { //監聽 port
+  console.log(`Example app listening at http://localhost:${port}`)
+})
