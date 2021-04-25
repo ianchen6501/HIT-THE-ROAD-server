@@ -154,10 +154,7 @@ const schedulesController = {
           ['id', 'DESC']
         ]
       }).then(schedules => {
-        if(schedules.length) {
           return res.json(schedules).end()
-        }
-        res.json([]).end()
       }).catch(error => {
         res.send(error.toString()).end()
       })
