@@ -172,6 +172,7 @@ const schedulesController = {
         
         //parse JSON coloumn datatype
         //TODO: 確認是否如此轉換
+<<<<<<< HEAD
         //schedule.dailyRoutines? JSON.parse(schedule.dailyRoutines): {}
         //schedule.dateRange? JSON.parse(schedule.dateRange): {}
         //schedule.routes? JSON.parse(schedule.routes): null 
