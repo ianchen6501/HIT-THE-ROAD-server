@@ -16,7 +16,7 @@ const requestUrl = {
   remote: "https://ianchen6501.github.io"
 }
 const corsOptions = {
-  origin: requestUrl.local,
+  origin: requestUrl.remote,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

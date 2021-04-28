@@ -15,11 +15,11 @@ const schedulesController = {
         ],
       }).then(schedules => {
         // if(schedules.length) {
-          return res.send(schedules).end()
+          return res.json(schedules).end()
         // }
         // res.send('no content').end()
       }).catch(error => {
-        res.send(error.toString()).end()
+        res.json(error.toString()).end()
       })
     } else { //all
       schedules.findAll({
@@ -29,11 +29,11 @@ const schedulesController = {
       })
       .then(schedules => {
         // if(schedules.length) {
-          return res.send(schedules).end()
+          return res.json(schedules).end()
         // }
         // res.send('no content').end()
       }).catch(error => {
-        res.send(error.toString()).end()
+        res.json(error.toString()).end()
       })
     }
   },  
@@ -65,10 +65,6 @@ const schedulesController = {
         res.json(error.toString()).end()
       })
     } else { //all
-      //FIXME: 測試 cookies
-      const cookies = req.cookies
-      console.log(cookies)
-
       schedules.findAll({
         where : {
           isFinished: true,
@@ -83,12 +79,10 @@ const schedulesController = {
           ['id', 'DESC']
         ],
       }).then(posts => {
-        // if(posts.length) {
-        // parse JSON couloum datatype
-        posts.map(post => {
-          post.dailyRoutines = JSON.parse(post.dailyRoutines)
-          post.dateRange = JSON.parse(post.dateRange)
-        })
+        // posts.map(post => {
+        //   post.dailyRoutines = JSON.parse(post.dailyRoutines)
+        //   post.dateRange = JSON.parse(post.dateRange)
+        // })
         return res.json(posts).end()
         // }
         // res.json('no content').end()
@@ -111,10 +105,7 @@ const schedulesController = {
       }]
     })
     .then(post => {
-      if(post) {
-        return res.json(post).end()
-      }
-      res.json([]).end()
+      return res.json(post).end()
     }).catch(error => {
       return res.send(error.toString()).end()
     })
@@ -135,15 +126,15 @@ const schedulesController = {
       }).then(schedules => {
         // if(schedules.length) {
         //parse JSON coloumn datatype
-        schedules.map(schedule => {
-          schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
-          schedule.dateRange = JSON.parse(schedule.dateRange)
-        })
+        // schedules.map(schedule => {
+        //   schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
+        //   schedule.dateRange = JSON.parse(schedule.dateRange)
+        // })
         res.json(schedules).end()
         // }
         // res.send('no content').end()
       }).catch(error => {
-        res.send(error.toString()).end()
+        res.json(error.toString()).end()
       })
     } else { //all
       schedules.findAll({
@@ -156,7 +147,7 @@ const schedulesController = {
       }).then(schedules => {
           return res.json(schedules).end()
       }).catch(error => {
-        res.send(error.toString()).end()
+        res.json(error.toString()).end()
       })
     }
   },
@@ -169,18 +160,18 @@ const schedulesController = {
         UserId,
       }
     }).then(schedule => {
-      if(schedule) {
+      // if(schedule) {
         //parse JSON coloumn datatype
         //TODO: 確認是否如此轉換
-        schedule.dailyRoutines? JSON.parse(schedule.dailyRoutines): {}
-        schedule.dateRange? JSON.parse(schedule.dateRange): {}
-        schedule.routes? JSON.parse(schedule.routes): null 
-        schedule.markers? JSON.parse(schedule.markers): []
-        schedule.spots? JSON.parse(schedule.spots): {}
-        schedule.spotsIds? JSON.parse(schedule.spotsIds): []
+        // schedule.dailyRoutines? JSON.parse(schedule.dailyRoutines): {}
+        // schedule.dateRange? JSON.parse(schedule.dateRange): {}
+        // schedule.routes? JSON.parse(schedule.routes): null 
+        // schedule.markers? JSON.parse(schedule.markers): []
+        // schedule.spots? JSON.parse(schedule.spots): {}
+        // schedule.spotsIds? JSON.parse(schedule.spotsIds): []
         return res.json(schedule).end()
-      }
-      res.json({}).end()
+      // }
+      // res.json({}).end()
     }).catch(error => {
       return res.json(error.toString()).end()
     })
