@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5001
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
@@ -16,7 +16,7 @@ const requestUrl = {
   remote: "https://ianchen6501.github.io"
 }
 const corsOptions = {
-  origin: requestUrl.local,
+  origin: requestUrl.remote,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

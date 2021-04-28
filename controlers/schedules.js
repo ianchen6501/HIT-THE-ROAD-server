@@ -85,10 +85,10 @@ const schedulesController = {
       }).then(posts => {
         // if(posts.length) {
         // parse JSON couloum datatype
-        posts.map(post => {
-          post.dailyRoutines = JSON.parse(post.dailyRoutines)
-          post.dateRange = JSON.parse(post.dateRange)
-        })
+        //posts.map(post => {
+          //post.dailyRoutines = JSON.parse(post.dailyRoutines)
+          //post.dateRange = JSON.parse(post.dateRange)
+        //})
         return res.json(posts).end()
         // }
         // res.json('no content').end()
@@ -135,10 +135,10 @@ const schedulesController = {
       }).then(schedules => {
         // if(schedules.length) {
         //parse JSON coloumn datatype
-        schedules.map(schedule => {
-          schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
-          schedule.dateRange = JSON.parse(schedule.dateRange)
-        })
+        //schedules.map(schedule => {
+          //schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
+          //schedule.dateRange = JSON.parse(schedule.dateRange)
+        //})
         res.json(schedules).end()
         // }
         // res.send('no content').end()
@@ -169,18 +169,18 @@ const schedulesController = {
         UserId,
       }
     }).then(schedule => {
-      if(schedule) {
+        
         //parse JSON coloumn datatype
         //TODO: 確認是否如此轉換
-        schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines)
-        schedule.dateRange = JSON.parse(schedule.dateRange)
-        schedule.routes = JSON.parse(schedule.routes)
-        schedule.markers = JSON.parse(schedule.markers)
-        schedule.spots = JSON.parse(schedule.spots)
-        schedule.spotsIds = JSON.parse(schedule.spotsIds)
-        return res.json(schedule).end()
-      }
-      res.json([]).end()
+        //schedule.dailyRoutines? JSON.parse(schedule.dailyRoutines): {}
+        //schedule.dateRange? JSON.parse(schedule.dateRange): {}
+        //schedule.routes? JSON.parse(schedule.routes): null 
+        //schedule.markers? JSON.parse(schedule.markers): []
+        //schedule.spots? JSON.parse(schedule.spots): {}
+        //schedule.spotsIds? JSON.parse(schedule.spotsIds): []
+        console.log(schedule)
+	    console.log(schedule.dailyRoutines)
+	    return res.json(schedule).end()
     }).catch(error => {
       return res.json(error.toString()).end()
     })
