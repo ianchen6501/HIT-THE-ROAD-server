@@ -189,6 +189,7 @@ const schedulesController = {
 	},
 
 	getUserOneSchedule: (req, res) => {
+		console.log("getUserOneSchedule");
 		const UserId = req.params.userId;
 		schedules
 			.findOne({
@@ -198,10 +199,14 @@ const schedulesController = {
 				},
 			})
 			.then((schedule) => {
+				console.log("[DEBUG] original schedule:", schedule);
 				if (schedule) {
 					//TODO: 確認是否如此轉換
 					schedule.dailyRoutines = JSON.parse(schedule.dailyRoutines);
 					schedule.dateRange = JSON.parse(schedule.dateRange);
+					schedule.markers = JSON.parse(schedule.markers);
+					schedule.spotsIds = JSON.parse(schedule.spotsIds);
+					schedule.spots = JSON.parse(schedule.spots);
 					return res.json(schedule).end();
 				}
 			})
