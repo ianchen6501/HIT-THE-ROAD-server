@@ -41,6 +41,11 @@ const schedulesController = {
 	},
 
 	getAllPosts: (req, res) => {
+		const response = {
+			ok: null,
+			posts: null,
+			error: null,
+		};
 		//filter
 		if (req.query.filter) {
 			schedules
@@ -67,13 +72,14 @@ const schedulesController = {
 					order: [["id", "DESC"]],
 				})
 				.then((posts) => {
-					// if(posts.length) {
-					return res.json(posts).end();
-					// }
-					// res.json('no content').end()
+					response.ok = true;
+					response.posts = posts;
+					res.json(response).end();
 				})
 				.catch((error) => {
-					res.json(error.toString()).end();
+					response.ok = false;
+					response.error = error.toString();
+					res.json(response).end();
 				});
 		} else {
 			//all
@@ -100,16 +106,14 @@ const schedulesController = {
 					order: [["id", "DESC"]],
 				})
 				.then((posts) => {
-					// posts.map(post => {
-					//   post.dailyRoutines = JSON.parse(post.dailyRoutines)
-					//   post.dateRange = JSON.parse(post.dateRange)
-					// })
-					return res.json(posts).end();
-					// }
-					// res.json('no content').end()
+					response.ok = true;
+					response.posts = posts;
+					res.json(response).end();
 				})
 				.catch((error) => {
-					return res.json(error.toString()).end();
+					response.ok = false;
+					response.error = error.toString();
+					res.json(response).end();
 				});
 		}
 	},
